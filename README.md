@@ -1,2 +1,2 @@
-# full-stack-kurssi
-Full Stack -websovelluskehityskurssin harjoitukset
+#Full Stack -websovelluskehityskurssin harjoitukset
+
