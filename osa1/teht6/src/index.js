@@ -11,17 +11,13 @@ const Button = ({handleClick, text}) => (
     </button>
 )
 
-const Statistics = ({good, neutral, bad}) => {
-    const sum = good + neutral + bad
+const Statistics = ({text, number}) => {
+
     return (
-    <>
-        <p>Hyvä {good}</p>
-        <p>Neutraali {neutral}</p>
-        <p>Huono {bad}</p>
-        <p>Yhteensä {sum}</p>
-        <p>Keskiarvo {(good - bad) / sum}</p>
-        <p>Positiivisia {(good / sum) * 100 } %</p>
-    </>
+        <tr>
+            <td>{text}</td>
+            <td>{number}</td>
+        </tr>
     )
 }
 
@@ -30,6 +26,7 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const sum = good + neutral + bad
 
   const handleGoodClick = () => {
     setGood(good + 1)
@@ -43,16 +40,38 @@ const App = () => {
     setBad(bad + 1)
   }
 
-  return (
-    <div>
-      <FeedbackHeader />
-      <Button handleClick={handleGoodClick} text={'Hyvä'} />
-      <Button handleClick={handleNeutralClick} text={'Neutraali'} />
-      <Button handleClick={handleBadClick} text={'Huono'} />
-      <StatisticsHeader />
-      <Statistics good={good} neutral={neutral} bad={bad}/>
-    </div>
-  )
+  if(sum===0){
+        return(
+            <div>
+                <FeedbackHeader />
+                <Button handleClick={handleGoodClick} text={'Hyvä'} />
+                <Button handleClick={handleNeutralClick} text={'Neutraali'} />
+                <Button handleClick={handleBadClick} text={'Huono'} />
+                <StatisticsHeader />
+                <p>Ei yhtään palautetta annettu</p>
+            </div>
+        )
+    } else {
+        return(
+            <div>
+                <FeedbackHeader />
+                <Button handleClick={handleGoodClick} text={'Hyvä'} />
+                <Button handleClick={handleNeutralClick} text={'Neutraali'} />
+                <Button handleClick={handleBadClick} text={'Huono'} />
+                <StatisticsHeader />
+                <table>
+                    <tbody>
+                        <Statistics text={'Hyvä'} number={good} />
+                        <Statistics text={'Neutraali'} number={neutral} />
+                        <Statistics text={'Huono'} number={bad} />
+                        <Statistics text={'Yhteensä'} number={sum} />
+                        <Statistics text={'Keskiarvo'} number={(good - bad) / sum} />
+                        <Statistics text={'Positiivisia'} number={(((good / sum)*100).toString()).concat(' %')} />
+                    </tbody>
+                </table>
+            </div>
+        )
+    }
 }
 
 ReactDOM.render(<App />, 
