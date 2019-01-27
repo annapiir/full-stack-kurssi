@@ -11,13 +11,19 @@ const Button = ({handleClick, text}) => (
     </button>
 )
 
-const Statistics = ({good, neutral, bad}) => (
+const Statistics = ({good, neutral, bad}) => {
+    const sum = good + neutral + bad
+    return (
     <>
         <p>Hyvä {good}</p>
         <p>Neutraali {neutral}</p>
         <p>Huono {bad}</p>
+        <p>Yhteensä {sum}</p>
+        <p>Keskiarvo {(good - bad) / sum}</p>
+        <p>Positiivisia {(good / sum) * 100 } %</p>
     </>
-)
+    )
+}
 
 const App = () => {
   // tallenna napit omaan tilaansa
