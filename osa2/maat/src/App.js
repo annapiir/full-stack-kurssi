@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const Countries = ({countries, showCountries}) => {
-  const showed = countries.filter(country => 
+const Countries = ({countries, showCountries, setShowCountries}) => {
+  let showed = countries.filter(country => 
     country.name.toUpperCase().includes(showCountries.toUpperCase()))
-    
+
+  const handleClick = (event) => (
+    setShowCountries(event.target.value)
+  )
 
   if (showed.length > 10) {
 
@@ -18,13 +21,19 @@ const Countries = ({countries, showCountries}) => {
   } else {
 
     return (
-      showed.map(country => <div key={country.name}>{country.name}</div> )
+      showed.map(country => 
+        <div key={country.name}>
+          <form>
+          {country.name}
+          <button value={country.name} onClick={handleClick}>Show</button>
+          </form>
+        </div> )
     )
   }
 }
 
 const Country = ({country}) => {
-  const languages = country.languages.map(language => <li>{language.name}</li>)
+  const languages = country.languages.map(language => <li key={language.name}>{language.name}</li>)
 
   return (
     <>
@@ -57,13 +66,14 @@ const App = () => {
     setShowCountries(event.target.value)
   }
 
+
   return (
     <div>
       <p>
         Find countries: 
         <input value={showCountries} onChange={handleShowCountriesChange} />  
       </p>
-      <Countries countries={countries} showCountries={showCountries} />
+      <Countries countries={countries} showCountries={showCountries} setShowCountries={setShowCountries}/>
     </div>
   )
 }
