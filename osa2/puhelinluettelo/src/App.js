@@ -8,12 +8,17 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
-    const nameObject = {
-      name: newName
-    }
+    
+    if (persons.filter(person => (person.name === newName)).length > 0) {
+      window.alert(`${newName} on jo luettelossa`)
+    } else {
+      const nameObject = {
+        name: newName
+      }
 
-    setPersons(persons.concat(nameObject))
-    setNewName('')
+      setPersons(persons.concat(nameObject))
+      setNewName('')
+    }
   }
 
   const handleNameChange = (event) => {
