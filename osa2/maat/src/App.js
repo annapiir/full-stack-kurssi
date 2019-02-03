@@ -23,10 +23,8 @@ const Countries = ({countries, showCountries, setShowCountries}) => {
     return (
       showed.map(country => 
         <div key={country.name}>
-          <form>
           {country.name}
           <button value={country.name} onClick={handleClick}>Show</button>
-          </form>
         </div> )
     )
   }
@@ -34,7 +32,7 @@ const Countries = ({countries, showCountries, setShowCountries}) => {
 
 const Country = ({country}) => {
   const languages = country.languages.map(language => <li key={language.name}>{language.name}</li>)
-
+  
   return (
     <>
       <h1>{country.name}</h1>
