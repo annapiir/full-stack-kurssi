@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const Persons = ({persons, showName}) => {
   const showed = persons.filter(person => person.name.toUpperCase().includes(showName.toUpperCase()))
@@ -27,15 +28,18 @@ const Filter = ({showName, handleShowNameChange}) => (
 
 
 const App = () => {
-  const [ persons, setPersons] = useState(
-    [{ name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Martti Tienari', number: '040-123456' },
-    { name: 'Arto Järvinen', number: '040-123456' },
-    { name: 'Lea Kutvonen', number: '040-123456' }]
-  ) 
+  const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ showName, setShowName ] = useState('')
+
+  useEffect(() => {
+    console.log('effect')
+    axios.get('http://localhost:3001/persons').then(response => {
+      console.log('callback')
+      setPersons(response.data)
+    })
+  }, [])
 
 
   const addName = (event) => {
