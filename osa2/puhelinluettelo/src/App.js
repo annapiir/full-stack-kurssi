@@ -46,7 +46,16 @@ const App = () => {
     event.preventDefault()
     
     if (persons.filter(person => (person.name === newName)).length > 0) {
-      window.alert(`${newName} on jo luettelossa`)
+      if (window.confirm(`${newName} on jo luettelossa, korvataanko vanha numero uudella?`)) {
+        const updatePerson = (persons.filter(person => (person.name === newName)))[0]
+        const updateObject = { ...updatePerson, number: newNumber }
+
+        personService
+        .update(updatePerson.id, updateObject)
+        .then(returnedPerson => {
+          setPersons(persons.map(p => p.id !== updatePerson.id ? p : returnedPerson))
+        })
+      } 
     } else {
       const nameObject = {
         name: newName,
@@ -84,7 +93,7 @@ const App = () => {
         personService
           .deletePerson(id)
           .then()
-          
+
         setPersons(persons.filter(p => p.id !== person.id))
       }
 
