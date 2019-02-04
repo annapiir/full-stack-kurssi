@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
-const Persons = ({persons, showName}) => {
-  const showed = persons.filter(person => person.name.toUpperCase().includes(showName.toUpperCase()))
+const Person = ({person, handleDeletePerson}) => {
 
   return (
-    showed.map(person => <p key={person.name}>{person.name} {person.number}</p>)
+      <div key={person.id}>
+        {person.name} {person.number} 
+        <button onClick={() => handleDeletePerson()}>Poista</button>
+      </div>
   )
 }
 
@@ -34,11 +36,9 @@ const App = () => {
   const [ showName, setShowName ] = useState('')
 
   useEffect(() => {
-    console.log('effect')
-    axios.get('http://localhost:3001/persons').then(response => {
-      console.log('callback')
-      setPersons(response.data)
-    })
+    personService.getAll().then(initialPersons => 
+    setPersons(initialPersons)
+    )
   }, [])
 
 
@@ -53,11 +53,17 @@ const App = () => {
         number: newNumber
       }
 
-      setPersons(persons.concat(nameObject))
-      setNewName('')
-      setNewNumber('')
+      personService
+        .create(nameObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
+
     }
   }
+
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -71,7 +77,27 @@ const App = () => {
     setShowName(event.target.value)
   }
 
+  const handleDeletePerson = id => {
+      const person = persons.find(p => p.id === id)
 
+      if (window.confirm(`Haluatko varmasti poistaa ${person.name}?`)) {
+        personService
+          .deletePerson(id)
+          .then()
+          
+        setPersons(persons.filter(p => p.id !== person.id))
+      }
+
+  }
+
+  const rows = () => {
+    const showed = persons.filter(person => person.name.toUpperCase().includes(showName.toUpperCase()))
+
+    return (
+      showed.map(person => <Person key={person.id} person={person} 
+        handleDeletePerson={() => handleDeletePerson(person.id)}/>)
+    )
+  }
 
   return (
     <div>
@@ -81,7 +107,7 @@ const App = () => {
       <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} 
         newNumber={newNumber} handleNumberChange={handleNumberChange}/>
       <h3>Numerot</h3>
-      <Persons persons={persons} showName={showName}/>
+      {rows()}
     </div>
   )
 
