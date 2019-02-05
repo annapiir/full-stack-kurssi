@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
+import { setTimeout } from 'timers';
 
 const Person = ({person, handleDeletePerson}) => {
 
@@ -28,12 +29,25 @@ const Filter = ({showName, handleShowNameChange}) => (
   </div>
 )
 
+const Notification = ({ message }) => {
+  if (message[0] === null) {
+    return null
+  }
+
+  return (
+    <div className={message[1]}>
+      {message[0]}
+    </div>
+  )
+}
+
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ showName, setShowName ] = useState('')
+  const [ message, setMessage] = useState([null, 'notification'])
 
   useEffect(() => {
     personService.getAll().then(initialPersons => 
@@ -55,6 +69,9 @@ const App = () => {
         .then(returnedPerson => {
           setPersons(persons.map(p => p.id !== updatePerson.id ? p : returnedPerson))
         })
+
+        setMessage([`Muokattiin henkilön ${updateObject.name} puhelinnumeroa`, 'notification'])
+        setTimeout(() => {setMessage([null, 'notification'])}, 2000)
       } 
     } else {
       const nameObject = {
@@ -70,6 +87,8 @@ const App = () => {
           setNewNumber('')
         })
 
+      setMessage([`Lisättiin henkilö ${nameObject.name} luetteloon`, 'notification'])
+      setTimeout(() => {setMessage([null, 'notification'])}, 2000)
     }
   }
 
@@ -93,8 +112,14 @@ const App = () => {
         personService
           .deletePerson(id)
           .then()
+          .catch(error => {
+            setMessage([`Henkilö ${person.name} on jo poistettu luettelosta`, 'error'])
+            setTimeout(() => {setMessage([null, 'notification'])}, 2000)
+          })
 
         setPersons(persons.filter(p => p.id !== person.id))
+        setMessage([`Poistettiin henkilö ${person.name} luettelosta`, 'error'])
+        setTimeout(() => {setMessage([null, 'notification'])}, 2000)
       }
 
   }
@@ -111,6 +136,7 @@ const App = () => {
   return (
     <div>
       <h2>Puhelinluettelo</h2>
+      <Notification message={message} />
       <Filter showName={showName} handleShowNameChange={handleShowNameChange}/>
       <h3>Lisää uusi</h3>
       <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} 
