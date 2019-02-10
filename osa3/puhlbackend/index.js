@@ -2,9 +2,12 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const cors = require('cors')
 
 app.use(bodyParser.json())
 app.use(morgan('tiny'))
+app.use(cors())
+app.use(express.static('build'))
 
 let  persons = [
     {
@@ -65,6 +68,7 @@ app.post('/api/persons', (request, response) => {
     const newId = Math.floor(Math.random() * (max - min)) + min
   
     const body = request.body
+    console.log(body)
 
     if (body.name === undefined) {
         return response.status(400).json({ 
@@ -99,7 +103,9 @@ app.delete('/api/persons/:id', (request, response) => {
 });
 
 
-const port = 3001
-app.listen(port)
-console.log(`Server running on port ${port}`)
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+  })
+  
 
