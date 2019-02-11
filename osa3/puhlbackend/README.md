@@ -1,4 +1,4 @@
 ### Puhelinluettelo
 
 Sovelluksen osoite verkossa:
-https://tranquil-peak-38916.herokuapp.com/
+https://thawing-chamber-69544.herokuapp.com/
