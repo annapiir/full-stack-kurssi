@@ -17,13 +17,14 @@ app.get('/', (req, res) => {
 })
 
 app.get('/info', (req, res) => {
+  Person.estimatedDocumentCount()
+    .then(count => {
+      const date = new Date()
 
-    const date = new Date()
-    const number = persons.length
-    res.send(
-        `<p>Puhelinluettelossa on ${number} henkilön tiedot</p> 
+      res.send(
+        `<p>Puhelinluettelossa on ${count} henkilön tiedot</p> 
         <p>${date}</p>`
-    )
+      )})
 })
 
 app.get('/api/persons', (request, response) => {
@@ -44,22 +45,36 @@ app.get('/api/persons/:id', (request, response, next) => {
 })
 
 app.post('/api/persons', (request, response) => {
-    const body = request.body
+  const body = request.body
   
-    if (body.name === undefined) {
-      return response.status(400).json({ error: 'content missing' })
-    }
+  if (body.name === undefined) {
+    return response.status(400).json({ error: 'content missing' })
+  }
   
-    const person = new Person({
-      name: body.name,
-      number: body.number,
-    })
-  
-    person.save().then(savedPerson => {
-      response.json(savedPerson.toJSON())
-    })
+  const person = new Person({
+    name: body.name,
+    number: body.number,
   })
+  
+  person.save().then(savedPerson => {
+    response.json(savedPerson.toJSON())
+  })
+})
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+  
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+  
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson.toJSON())
+    })
+    .catch(error => next(error))
+})
 
 app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
