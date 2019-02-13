@@ -85,10 +85,15 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setMessage([`Lisättiin henkilö ${nameObject.name} luetteloon`, 'notification'])
+          setTimeout(() => {setMessage([null, 'notification'])}, 2000)
+        })
+        .catch(error => {
+          setMessage([`${error.response.data.error}`, 'error'])
+          setTimeout(() => {setMessage([null, 'notification'])}, 2000)
         })
 
-      setMessage([`Lisättiin henkilö ${nameObject.name} luetteloon`, 'notification'])
-      setTimeout(() => {setMessage([null, 'notification'])}, 2000)
+      
     }
   }
 
