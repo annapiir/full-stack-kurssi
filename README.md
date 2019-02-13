@@ -15,3 +15,7 @@
   * Tehtävät 6 - 11 ja 15 - 18 **osan 2** sovelluksessa **puhelinluettelo**
   * Tehtävät 12 - 13 **osan 2** sovelluksessa **maat**
 
+### Osa 3
+- Tehty tehtävät 1 - 7 ja 9 - 19
+  * Tehtävät **osan 3** sovelluksessa **puhlbackend**
+
