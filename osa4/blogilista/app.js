@@ -7,7 +7,7 @@ const mongoose = require('mongoose')
 
 console.log('connecting to MongoDB')
 
-mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true })
+mongoose.connect(config.mongoUrl, { useNewUrlParser: true })
   .then(() => {
     console.log('connected to MongoDB')
   })
