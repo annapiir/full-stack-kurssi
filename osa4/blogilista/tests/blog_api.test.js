@@ -122,9 +122,50 @@ test('deletion succeeds with status code 204 if id is valid', async () => {
         const usersAtEnd = await helper.usersInDb()
         expect(usersAtEnd.length).toBe(usersAtStart.length)
       })
-    })
-  
 
+      test('creation fails without username', async () => {
+        const usersAtStart = await helper.usersInDb()
+    
+        const newUser = {
+          name: 'Superuser',
+          password: 'salainen',
+        }
+    
+        const result = await api
+          .post('/api/users')
+          .send(newUser)
+          .expect(400)
+          .expect('Content-Type', /application\/json/)
+    
+        expect(result.body.error).toContain('username or password missing')
+    
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd.length).toBe(usersAtStart.length)
+      })
+
+      test('creation fails with password length < 4', async () => {
+        const usersAtStart = await helper.usersInDb()
+    
+        const newUser = {
+          username: 'root',
+          name: 'Superuser',
+          password: 'sa',
+        }
+    
+        const result = await api
+          .post('/api/users')
+          .send(newUser)
+          .expect(400)
+          .expect('Content-Type', /application\/json/)
+    
+        expect(result.body.error).toContain('username or password length less than 4 characters')
+    
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd.length).toBe(usersAtStart.length)
+      })
+    })
+
+  
 afterAll(() => {
   mongoose.connection.close()
 })
