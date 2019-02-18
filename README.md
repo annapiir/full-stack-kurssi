@@ -19,3 +19,7 @@
 - Tehty tehtävät 1 - 7 ja 9 - 19
   * Tehtävät **osan 3** sovelluksessa **puhlbackend**
 
+### Osa 4
+- Tehty tehtävät 1 - 5, 8 - 10, 13, 15 - 19
+  * Tehtävät **osan 4** sovelluksessa **blogilista**
+
