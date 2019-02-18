@@ -5,6 +5,8 @@ const app = express()
 const blogsRouter = require('./controllers/blogs')
 const mongoose = require('mongoose')
 const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
+
 
 console.log('connecting to MongoDB')
 
@@ -20,6 +22,7 @@ app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
 
 module.exports = app
