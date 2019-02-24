@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login' 
 import BlogForm from './components/BlogForm';
+import Notification from './components/Notification';
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -12,6 +13,9 @@ const App = () => {
   const [newTitle, setNewTitle]= useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
+  const [notification, setNotification] = useState({
+    message: null
+  })
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -28,8 +32,14 @@ const App = () => {
     }
   }, [])
 
+  const notify = (message, type='success') => {
+    setNotification({ message, type })
+    setTimeout(() => setNotification({ message: null }), 10000)
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
+
     try {
       const user = await loginService.login({
         username, password,
@@ -37,15 +47,17 @@ const App = () => {
 
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      ) 
+      )
+
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch (exception) {
-      console.log('käyttäjätunnus tai salasana virheellinen')
+
+    } catch (exeption) {
+      notify('Wrong username or password', 'error')
+    }
   }
-}
 
 const handleLogout = async (event) => {
   event.preventDefault()
@@ -66,6 +78,7 @@ const handleAddBlog = async (event) => {
   setNewTitle('')
   setNewAuthor('')
   setNewUrl('')
+  notify(`Blog ${createdBlog.title} was added`)
 
   return
 }
@@ -78,6 +91,7 @@ const handleUrlChange = (event) => setNewUrl(event.target.value)
     return (
       <div>
         <h2>Log in to application</h2>
+        <Notification notification={notification}/>
         <form onSubmit={handleLogin}>
         <div>
           käyttäjätunnus
@@ -106,6 +120,7 @@ const handleUrlChange = (event) => setNewUrl(event.target.value)
   return (
     <div>
       <h2>Blogs</h2>
+      <Notification notification={notification}/>
       <p>{user.name} logged in</p>
       <p></p>
       <form onSubmit={handleLogout}>
