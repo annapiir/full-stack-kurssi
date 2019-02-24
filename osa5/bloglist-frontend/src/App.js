@@ -3,7 +3,9 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login' 
 import BlogForm from './components/BlogForm';
-import Notification from './components/Notification';
+import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -32,6 +34,7 @@ const App = () => {
     }
   }, [])
 
+
   const notify = (message, type='success') => {
     setNotification({ message, type })
     setTimeout(() => setNotification({ message: null }), 10000)
@@ -59,73 +62,74 @@ const App = () => {
     }
   }
 
-const handleLogout = async (event) => {
-  event.preventDefault()
-  window.localStorage.removeItem('loggedBlogappUser')
-  blogService.setToken(null)
-  setUser(null)
-}
+  const handleLogout = async (event) => {
+    event.preventDefault()
+    window.localStorage.removeItem('loggedBlogappUser')
+    blogService.setToken(null)
+    setUser(null)
+  }
 
-const handleAddBlog = async (event) => {
-  event.preventDefault()
+  const handleAddBlog = async (event) => {
+    event.preventDefault()
 
-  const createdBlog = await blogService.create({
-    title: newTitle,
-    author: newAuthor,
-    url: newUrl
-  })
-  setBlogs(blogs.concat(createdBlog))
-  setNewTitle('')
-  setNewAuthor('')
-  setNewUrl('')
-  notify(`Blog ${createdBlog.title} was added`)
+    const createdBlog = await blogService.create({
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl
+    })
+    setBlogs(blogs.concat(createdBlog))
+    setNewTitle('')
+    setNewAuthor('')
+    setNewUrl('')
+    notify(`Blog ${createdBlog.title} was added`)
 
-  return
-}
+    return
+  }
 
-const handleTitleChange = (event) => setNewTitle(event.target.value)
-const handleAuthorChange = (event) => setNewAuthor(event.target.value)
-const handleUrlChange = (event) => setNewUrl(event.target.value)
-
-  if (user === null) {
+  const loginForm = () => {
     return (
       <div>
-        <h2>Log in to application</h2>
-        <Notification notification={notification}/>
-        <form onSubmit={handleLogin}>
-        <div>
-          käyttäjätunnus
-            <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          salasana
-            <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">kirjaudu</button>
-      </form>
+        <Togglable buttonLabel='login'>
+          <LoginForm 
+            handleLogin={handleLogin}
+            handleUsernameChange={handleUsernameChange}
+            handlePasswordChange={handlePasswordChange}
+            username={username} 
+            password={password}
+          /> 
+       </Togglable>
       </div>
     )
-  } else {
+  }
+
+  const logoutForm = () => {
+    return (
+      <div>
+        <p>{user.name} logged in</p>
+        <form onSubmit={handleLogout}>
+          <button type="submit">logout</button>
+        </form>
+      </div>
+    )
+  }
+
+  const handleTitleChange = (event) => setNewTitle(event.target.value)
+  const handleAuthorChange = (event) => setNewAuthor(event.target.value)
+  const handleUrlChange = (event) => setNewUrl(event.target.value)
+  const handleUsernameChange = (event) => setUsername(event.target.value)
+  const handlePasswordChange = (event) => setPassword(event.target.value)
+
 
   return (
     <div>
       <h2>Blogs</h2>
       <Notification notification={notification}/>
-      <p>{user.name} logged in</p>
-      <p></p>
-      <form onSubmit={handleLogout}>
-        <button type="submit">logout</button>
-      </form>
+
+      {user === null ?
+        loginForm() :
+        logoutForm()
+      }
+      
       <h2>Create New</h2>
       <BlogForm
         handleTitleChange={handleTitleChange}
@@ -142,7 +146,6 @@ const handleUrlChange = (event) => setNewUrl(event.target.value)
       )}
     </div>
   )
-  }
 }
 
 
