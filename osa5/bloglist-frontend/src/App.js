@@ -13,9 +13,9 @@ const App = () => {
   const password = useField('text')
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [newTitle, setNewTitle]= useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
   const [notification, setNotification] = useState({
     message: null
   })
@@ -57,9 +57,13 @@ const App = () => {
 
       blogService.setToken(user.token)
       setUser(user)
+      username.reset()
+      password.reset()
 
     } catch (exeption) {
       notify('Wrong username or password', 'error')
+      username.reset()
+      password.reset()
     }
   }
 
@@ -74,14 +78,14 @@ const App = () => {
     event.preventDefault()
 
     const createdBlog = await blogService.create({
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
+      title: title.value,
+      author: author.value,
+      url: url.value
     })
     setBlogs(blogs.concat(createdBlog))
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
+    title.reset()
+    author.reset()
+    url.reset()
     notify(`Blog ${createdBlog.title} was added`)
 
     return
@@ -114,10 +118,6 @@ const App = () => {
     )
   }
 
-  const handleTitleChange = (event) => setNewTitle(event.target.value)
-  const handleAuthorChange = (event) => setNewAuthor(event.target.value)
-  const handleUrlChange = (event) => setNewUrl(event.target.value)
-
   return (
     <div>
       <h2>Blogs</h2>
@@ -130,12 +130,12 @@ const App = () => {
 
       <h2>Create New</h2>
       <BlogForm
-        handleTitleChange={handleTitleChange}
-        handleAuthorChange={handleAuthorChange}
-        handleUrlChange={handleUrlChange}
-        newTitle={newTitle}
-        newAuthor={newAuthor}
-        newUrl={newUrl}
+        handleTitleChange={title.onChange}
+        handleAuthorChange={author.onChange}
+        handleUrlChange={url.onChange}
+        newTitle={title.value}
+        newAuthor={author.value}
+        newUrl={url.value}
         handleAddBlog={handleAddBlog}
       />
       <h2>List of Blogs</h2>
