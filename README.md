@@ -23,3 +23,7 @@
 - Tehty tehtävät 1 - 5, 8 - 10, 13, 15 - 19
   * Tehtävät **osan 4** sovelluksessa **blogilista**
 
+### Osa 5
+- Tehty tehtävät 1 - 6, 11 - 14, 18 - 20
+  * Tehtävät **osan 5** sovelluksissa **bloglist-frontend** ja **bloglist-backend**
+
