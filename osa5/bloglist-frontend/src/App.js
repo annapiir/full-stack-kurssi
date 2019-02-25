@@ -77,7 +77,7 @@ const App = () => {
   const handleAddBlog = async (event) => {
     event.preventDefault()
 
-    const createdBlog = await blogService.create({
+    try {const createdBlog = await blogService.create({
       title: title.value,
       author: author.value,
       url: url.value
@@ -87,8 +87,10 @@ const App = () => {
     author.reset()
     url.reset()
     notify(`Blog ${createdBlog.title} was added`)
+    } catch (exeption) {
+      notify('unauthorized procedure, login first', 'error')
+    }
 
-    return
   }
 
   const loginForm = () => {
@@ -97,10 +99,8 @@ const App = () => {
         <Togglable buttonLabel='login'>
           <LoginForm
             handleLogin={handleLogin}
-            handleUsernameChange={username.onChange}
-            handlePasswordChange={password.onChange}
-            username={username.value}
-            password={password.value}
+            username={username}
+            password={password}
           />
         </Togglable>
       </div>
@@ -130,12 +130,9 @@ const App = () => {
 
       <h2>Create New</h2>
       <BlogForm
-        handleTitleChange={title.onChange}
-        handleAuthorChange={author.onChange}
-        handleUrlChange={url.onChange}
-        newTitle={title.value}
-        newAuthor={author.value}
-        newUrl={url.value}
+        title={title}
+        author={author}
+        url={url}
         handleAddBlog={handleAddBlog}
       />
       <h2>List of Blogs</h2>
@@ -145,6 +142,5 @@ const App = () => {
     </div>
   )
 }
-
 
 export default App
