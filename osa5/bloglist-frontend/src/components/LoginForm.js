@@ -1,12 +1,12 @@
-import React from 'react' 
+import React from 'react'
 
 const LoginForm = ({
-   handleLogin,
-   handleUsernameChange,
-   handlePasswordChange,
-   username, 
-   password 
-  }) => {
+  handleLogin,
+  handleUsernameChange,
+  handlePasswordChange,
+  username,
+  password
+}) => {
   return (
     <div>
       <h2>Log In</h2>
@@ -26,7 +26,7 @@ const LoginForm = ({
             value={password}
             onChange={handlePasswordChange}
           />
-      </div>
+        </div>
         <button type="submit">Login</button>
       </form>
     </div>

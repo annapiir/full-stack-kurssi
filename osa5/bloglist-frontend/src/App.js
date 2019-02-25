@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
-import loginService from './services/login' 
-import BlogForm from './components/BlogForm';
+import loginService from './services/login'
+import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [newTitle, setNewTitle]= useState('')
   const [newAuthor, setNewAuthor] = useState('')
@@ -22,7 +22,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -90,14 +90,14 @@ const App = () => {
     return (
       <div>
         <Togglable buttonLabel='login'>
-          <LoginForm 
+          <LoginForm
             handleLogin={handleLogin}
             handleUsernameChange={handleUsernameChange}
             handlePasswordChange={handlePasswordChange}
-            username={username} 
+            username={username}
             password={password}
-          /> 
-       </Togglable>
+          />
+        </Togglable>
       </div>
     )
   }
@@ -129,7 +129,7 @@ const App = () => {
         loginForm() :
         logoutForm()
       }
-      
+
       <h2>Create New</h2>
       <BlogForm
         handleTitleChange={handleTitleChange}
