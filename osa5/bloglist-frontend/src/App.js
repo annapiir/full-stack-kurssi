@@ -6,11 +6,12 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
+import  { useField } from './hooks'
 
 const App = () => {
+  const username = useField('text')
+  const password = useField('text')
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [newTitle, setNewTitle]= useState('')
   const [newAuthor, setNewAuthor] = useState('')
@@ -44,8 +45,10 @@ const App = () => {
     event.preventDefault()
 
     try {
+      const name = username.value
+      const word = password.value
       const user = await loginService.login({
-        username, password,
+        name, word
       })
 
       window.localStorage.setItem(
@@ -54,8 +57,6 @@ const App = () => {
 
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
 
     } catch (exeption) {
       notify('Wrong username or password', 'error')
@@ -92,10 +93,10 @@ const App = () => {
         <Togglable buttonLabel='login'>
           <LoginForm
             handleLogin={handleLogin}
-            handleUsernameChange={handleUsernameChange}
-            handlePasswordChange={handlePasswordChange}
-            username={username}
-            password={password}
+            handleUsernameChange={username.onChange}
+            handlePasswordChange={password.onChange}
+            username={username.value}
+            password={password.value}
           />
         </Togglable>
       </div>
@@ -116,9 +117,6 @@ const App = () => {
   const handleTitleChange = (event) => setNewTitle(event.target.value)
   const handleAuthorChange = (event) => setNewAuthor(event.target.value)
   const handleUrlChange = (event) => setNewUrl(event.target.value)
-  const handleUsernameChange = (event) => setUsername(event.target.value)
-  const handlePasswordChange = (event) => setPassword(event.target.value)
-
 
   return (
     <div>
