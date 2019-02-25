@@ -21,7 +21,7 @@ const Blog = ({ blog }) => {
       <div style={showWhenVisible}>
         <p>{blog.url}</p>
         <p>
-          {blog.likes} likes <button onCLick={() => console.log('click')}>like</button>
+          {blog.likes} likes <button onClick={() => console.log('click')}>like</button>
         </p>
         <p>
           Added by {blog.user.name}
