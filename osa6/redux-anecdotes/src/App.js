@@ -7,9 +7,30 @@ const voteOf = (id) => {
   }
 }
 
+const createAnecdote = (content) => {
+  return {
+    type: 'NEW_ANECDOTE',
+    data: {
+      content,
+      votes: 0,
+      id: generateId()
+    }
+  }
+}
+
+const generateId = () =>
+  Number((Math.random() * 1000000).toFixed(0))
+
 const App = (props) => {
   const anecdotes = props.store.getState()
   const store = props.store
+
+  const addAnecdote = (event) => {
+    event.preventDefault()
+    const content = event.target.anecdote.value
+    store.dispatch(createAnecdote(content))
+    event.target.anecdote.value = ''
+  }
   
   const vote = (id) => {
     store.dispatch(voteOf(id))
@@ -31,9 +52,9 @@ const App = (props) => {
         </div>
       )}
       <h2>create new</h2>
-      <form>
-        <div><input /></div>
-        <button>create</button>
+      <form onSubmit={addAnecdote}>
+        <div><input name="anecdote"/></div>
+        <button type="submit">create</button>
       </form>
     </div>
   )
